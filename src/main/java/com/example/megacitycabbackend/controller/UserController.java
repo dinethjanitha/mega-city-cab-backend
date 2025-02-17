@@ -4,11 +4,13 @@ import com.example.megacitycabbackend.dto.LoginDto;
 import com.example.megacitycabbackend.dto.UserDTO;
 import com.example.megacitycabbackend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/v1/")
+@CrossOrigin(origins = "http:localhost:3000")
 public class UserController {
 
     @Autowired
@@ -22,7 +24,7 @@ public class UserController {
     }
 
     @PostMapping("/user")
-    public UserDTO saveUser(@RequestBody UserDTO userDTO) throws Exception{
+    public ResponseEntity<?> saveUser(@RequestBody UserDTO userDTO) throws Exception{
         userDTO.setPassword(encoder.encode(userDTO.getPassword()));
         return userService.saveUser(userDTO);
     }
