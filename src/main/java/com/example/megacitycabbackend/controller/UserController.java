@@ -8,11 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("api/v1/")
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(origins = "http:localhost:3000")
 public class UserController {
 
     @Autowired
@@ -31,19 +29,8 @@ public class UserController {
         return userService.saveUser(userDTO);
     }
 
-    @GetMapping("/users")
-    public List<UserDTO> getAllUsers(){
-        return userService.getAllUsers();
-    }
-
     @PostMapping("/auth")
     public String login(@RequestBody LoginDto loginDto){
         return userService.login(loginDto);
     }
-
-    @PutMapping("/user")
-    public ResponseEntity<?> updateUser(@RequestBody UserDTO userDTO){
-        return userService.updateUser(userDTO);
-    }
-
 }
