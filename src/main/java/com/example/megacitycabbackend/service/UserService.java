@@ -15,7 +15,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.net.http.HttpClient;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -75,6 +77,15 @@ public class UserService {
 
     }
 
+    public List<UserDTO> getAllUsers(){
+        return userRepo.
+                findAll()
+                .stream()
+                .map(
+                        users -> modelMapper.map(users , UserDTO.class))
+                .collect(Collectors.toList());
+    }
+
     public String login(LoginDto loginDto){
         Authentication authentication =
                 authManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsername() , loginDto.getPassword()));
@@ -87,6 +98,17 @@ public class UserService {
         return "Fail";
     }
 
+
+    public ResponseEntity<?> updateUser(UserDTO userDTO){
+        Optional<UserModel> user = userRepo.findById(userDTO.getId());
+
+        if(user.isPresent()){
+            userRepo.save(modelMapper.map(userDTO , UserModel.class));
+            return ResponseEntity.status(HttpStatus.CREATED).body("OK");
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("faild!");
+    }
 
 
 
