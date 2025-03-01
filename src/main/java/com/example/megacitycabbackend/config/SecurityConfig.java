@@ -32,7 +32,7 @@ public class SecurityConfig {
         return http
                 .csrf( csrf -> csrf.disable())
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/v1/auth" , "/api/v1/users" , "/api/v1/user")
+                        .requestMatchers("/api/v1/auth" , "/api/v1/user" , "api/v1/cabs" , "/uploads/**")
                         .permitAll()
                         .anyRequest()
                         .fullyAuthenticated())
