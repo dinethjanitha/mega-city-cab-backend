@@ -40,7 +40,9 @@ public class UserService {
 
 
 
-
+    public int cal(int num1 , int num2){
+        return num1 + num2;
+    }
 
     public ResponseEntity<?> saveUser(UserDTO userDTO) throws  Exception{
 
@@ -111,6 +113,33 @@ public class UserService {
     }
 
 
+    public ResponseEntity<?> deleteUser(UserDTO userDTO){
+        try{
+            UserModel user = userRepo.findByUsername(userDTO.getUsername());
+
+            Optional<UserModel> checkUser = userRepo.findById(user.getId());
+
+            if(checkUser.isPresent()){
+                userRepo.deleteById(user.getId());
+            }else{
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found!");
+            }
+
+            Optional<UserModel> checkDeletedUser = userRepo.findById(user.getId());
+
+            if(checkDeletedUser.isEmpty()){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User Deleted!");
+            }
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Something String");
+
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
 
 
 

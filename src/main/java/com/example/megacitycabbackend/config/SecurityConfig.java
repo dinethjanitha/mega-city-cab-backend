@@ -45,7 +45,6 @@ public class SecurityConfig {
 
     }
 
-    //okayy
 
     @Bean
     public AuthenticationProvider authenticationProvider(){

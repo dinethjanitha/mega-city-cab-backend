@@ -9,15 +9,14 @@ public class CorsConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        System.out.println("CORS configuration applied"); // Add logging
+        System.out.println("CORS configuration applied");
         registry.addMapping("/**")
-                // Allow all endpoints
                 .allowedOrigins("http://localhost:3000")
-                .allowedOriginPatterns("*")// Allow specific origins
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Allowed HTTP methods
-                .allowedHeaders("*") // Allow all headers
-                .allowCredentials(true) // Allow cookies and credentials
-                .maxAge(3600); // Cache the preflight response for 1 hour
+                .allowedOriginPatterns("*")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .allowCredentials(true)
+                .maxAge(3600);
     }
 
 }
