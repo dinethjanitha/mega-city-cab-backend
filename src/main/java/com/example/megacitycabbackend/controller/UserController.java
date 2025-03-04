@@ -11,8 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("api/v1/")
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+
 public class UserController {
 
     @Autowired
@@ -30,6 +31,7 @@ public class UserController {
         userDTO.setPassword(encoder.encode(userDTO.getPassword()));
         return userService.saveUser(userDTO);
     }
+
 
     @GetMapping("/users")
     public List<UserDTO> getAllUsers(){
@@ -49,6 +51,11 @@ public class UserController {
     @DeleteMapping("/user")
     public ResponseEntity<?> deleteUser(@RequestBody UserDTO userDTO){
         return userService.deleteUser(userDTO);
+    }
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity<?> getUser(@PathVariable String id){
+        return userService.getUser(id);
     }
 
 }

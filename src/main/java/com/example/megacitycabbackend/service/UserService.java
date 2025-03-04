@@ -2,6 +2,7 @@ package com.example.megacitycabbackend.service;
 
 import com.example.megacitycabbackend.dto.LoginDto;
 import com.example.megacitycabbackend.dto.UserDTO;
+import com.example.megacitycabbackend.dto.UserProfileDto;
 import com.example.megacitycabbackend.model.UserModel;
 import com.example.megacitycabbackend.repo.UserRepo;
 import org.apache.catalina.User;
@@ -57,7 +58,7 @@ public class UserService {
             }else{
                 Optional<UserModel> user3 = userRepo.findUserByEmail((userDTO.getEmail()));
                 if(user3.isPresent()){
-                    System.out.println("User email A lready Exit");
+                    System.out.println("User email Already Exit");
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User email Already Exit");
                 }else{
                     Optional<UserModel> user4 = userRepo.findUserByNic((userDTO.getNic()));
@@ -94,7 +95,7 @@ public class UserService {
 
         if(authentication.isAuthenticated()){
             UserModel user = userRepo.findByUsername(loginDto.getUsername());
-            return jwtService.generateToken(loginDto.getUsername() , user.getRole());
+            return jwtService.generateToken(loginDto.getUsername() , user.getRole() , user.getId());
         }
 
         return "Fail";
@@ -138,6 +139,23 @@ public class UserService {
             throw new RuntimeException(e);
         }
 
+
+    }
+
+
+    //GET USER DETAILS with ID;
+
+    public ResponseEntity<?> getUser(String id){
+        Optional<UserModel> user = userRepo.findById(id);
+
+        if(user.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+
+        UserProfileDto userProfileDto = modelMapper.map(user.get() , UserProfileDto.class);
+
+
+        return ResponseEntity.status(HttpStatus.OK).body(userProfileDto);
 
     }
 

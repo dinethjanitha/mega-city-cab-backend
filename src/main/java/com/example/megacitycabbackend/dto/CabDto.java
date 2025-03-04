@@ -12,10 +12,16 @@ public class CabDto {
     @NotNull(message = "Cab name is required!")
     private String cabName;
     private String ownerName;
-    private String ownerId;
-    private String driverName;
+    private String driveId;
     private String driverLicence;
     private String userId;
     private String cabDescription;
+    private String phoneNumber;
+    private String addedDate;
+    private int sheetCount;
+
+    private double first7kmPrice;
+    private double avarageKmPrice;
+    private String status;
     private String imgUrl;
 }
