@@ -101,4 +101,9 @@ public class CabService {
     }
 
 
+    public ResponseEntity<?> getAllCabs(){
+        return ResponseEntity.status(HttpStatus.OK).body(cabRepo.findAll());
+    }
+
+
 }

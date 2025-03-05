@@ -56,5 +56,9 @@ public class CabController {
         return cabService.getCab(id);
     }
 
+    @GetMapping("/cab/all")
+    public ResponseEntity<?> getAllCabs(){
+        return cabService.getAllCabs();
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.example.megacitycabbackend.service;
 
+import com.example.megacitycabbackend.dto.BookingBillingDto;
 import com.example.megacitycabbackend.dto.BookingDtoUsers;
 import com.example.megacitycabbackend.dto.BookingUpdateDto;
 import com.example.megacitycabbackend.model.Booking;
@@ -114,5 +115,45 @@ public class BookingService {
 
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Booking not placed!");
+    }
+
+
+    public ResponseEntity<?> getUserBookingsNotPaid(String id){
+        List<Booking> notPaidBookinglist = bookingRepo.findAllByUserIdAndBookingStatusNot(id , "paid");
+
+        if(notPaidBookinglist.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Unpaid Bookings not Avalible!");
+
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(bookingRepo.findAllByUserId(id));
+    }
+
+    public ResponseEntity<?> getOneBooking(String id){
+        Optional<Booking> booking = bookingRepo.findById(id);
+        if(booking.isPresent()){
+            return ResponseEntity.status(HttpStatus.OK).body(booking.get());
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Booking not found!");
+
+    }
+
+    public ResponseEntity<?> updateBillingDetails(BookingBillingDto bookingBillingDto){
+        Optional<Booking> booking = bookingRepo.findById(bookingBillingDto.getId());
+
+        if(booking.isPresent()){
+
+            booking.get().setTotalKM(bookingBillingDto.getTotalKM());
+            booking.get().setTotal(bookingBillingDto.getTotal());
+            booking.get().setBookingStatus(bookingBillingDto.getBookingStatus());
+
+            Booking updatedBooking =  bookingRepo.save(booking.get());
+
+            return ResponseEntity.status(HttpStatus.OK).body(updatedBooking);
+
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Booking not found!");
     }
 }

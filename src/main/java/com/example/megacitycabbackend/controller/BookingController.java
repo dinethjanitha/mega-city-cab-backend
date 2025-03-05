@@ -1,5 +1,6 @@
 package com.example.megacitycabbackend.controller;
 
+import com.example.megacitycabbackend.dto.BookingBillingDto;
 import com.example.megacitycabbackend.dto.BookingDtoUsers;
 import com.example.megacitycabbackend.dto.BookingUpdateDto;
 import com.example.megacitycabbackend.model.Booking;
@@ -50,6 +51,18 @@ public class BookingController {
     public ResponseEntity<?> updateUserBooking(@RequestBody BookingDtoUsers bookingDtoUsers){
         return bookingService.updateBookingForUsers(bookingDtoUsers);
     }
+
+    @GetMapping("/booking/{id}")
+    public ResponseEntity<?> getBooking(@PathVariable String id){
+        return bookingService.getOneBooking(id);
+    }
+
+    @PatchMapping("/booking/bill")
+    public ResponseEntity<?> updateBookingBill(@RequestBody BookingBillingDto bookingBillingDto){
+        return bookingService.updateBillingDetails(bookingBillingDto);
+    }
+
+
 
 
 }

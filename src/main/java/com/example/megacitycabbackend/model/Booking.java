@@ -15,6 +15,8 @@ public class Booking {
     private String driverId;
     private String bookingTime;
     private String bookingDate;
+    private double totalKM;
+    private double total;
     private String bookingStatus;
     private String note;
     private String startDestination;
