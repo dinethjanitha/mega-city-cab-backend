@@ -95,7 +95,7 @@ public class UserService {
 
         if(authentication.isAuthenticated()){
             UserModel user = userRepo.findByUsername(loginDto.getUsername());
-            return jwtService.generateToken(loginDto.getUsername() , user.getRole() , user.getId());
+            return jwtService.generateToken(loginDto.getUsername() , user.getRole() , user.getId() , user.getEmail());
         }
 
         return "Fail";

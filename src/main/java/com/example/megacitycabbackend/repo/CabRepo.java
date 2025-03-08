@@ -18,4 +18,7 @@ public interface CabRepo extends MongoRepository<CabModel , String> {
     List<CabDto> findByDriveId(String driveId);
 
     List<CabDto> findByDriverLicence(String driverLicence);
+
+
+    List<CabModel> findAllByDriveId(String driveId);
 }

@@ -1,6 +1,7 @@
 package com.example.megacitycabbackend.controller;
 
 import com.example.megacitycabbackend.dto.CabDto;
+import com.example.megacitycabbackend.dto.CabUpdateDto;
 import com.example.megacitycabbackend.service.CabService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -59,6 +60,21 @@ public class CabController {
     @GetMapping("/cab/all")
     public ResponseEntity<?> getAllCabs(){
         return cabService.getAllCabs();
+    }
+
+    @PatchMapping("/cab")
+    public ResponseEntity<?> updateCabDetails(@RequestBody CabUpdateDto cabUpdateDto){
+        return cabService.updateCab(cabUpdateDto);
+    }
+
+    @GetMapping("/cab/dirver/{id}")
+    public ResponseEntity<?> getDriverCabs(@PathVariable String id){
+        return cabService.getCabsByDriverId(id);
+    }
+
+    @DeleteMapping("/cab/{id}")
+    public ResponseEntity<?> deleteCab(@PathVariable String id){
+        return cabService.deleteCab(id);
     }
 
 }

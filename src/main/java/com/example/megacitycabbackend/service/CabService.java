@@ -2,6 +2,7 @@ package com.example.megacitycabbackend.service;
 
 
 import com.example.megacitycabbackend.dto.CabDto;
+import com.example.megacitycabbackend.dto.CabUpdateDto;
 import com.example.megacitycabbackend.model.CabModel;
 import com.example.megacitycabbackend.repo.CabRepo;
 import org.modelmapper.ModelMapper;
@@ -35,28 +36,36 @@ public class CabService {
 
     public ResponseEntity<?> addCab(CabDto cabDto , MultipartFile image){
 
-        List<CabDto> checkdriver = cabRepo.findByDriverLicence(cabDto.getDriverLicence());
+        List<CabModel> cabs = cabRepo.findAllByDriveId(cabDto.getDriveId());
 
-        if(!checkdriver.isEmpty()){
-            System.out.println("Driver already have cab");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This driving licence already regisred with vehical remove that vehical to add new vehical");
-        }
+        if(cabs.isEmpty()){
+            List<CabDto> checkdriver = cabRepo.findByDriverLicence(cabDto.getDriverLicence());
 
-        try{
-            if(!image.isEmpty()){
-                String imageUrl = saveImage(image);
-                cabDto.setImgUrl(imageUrl);
-            }else{
-                cabDto.setImgUrl(null);
+            if(!checkdriver.isEmpty()){
+                System.out.println("Driver already have cab");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This driving licence already regisred with vehical remove that vehical to add new vehical");
             }
 
-            cabDto.setAddedDate(new Date().toString());
-            CabModel cab = cabRepo.save(modelMapper.map(cabDto , CabModel.class));
-            return ResponseEntity.status(HttpStatus.CREATED).body("User Created!");
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            try{
+                if(!image.isEmpty()){
+                    String imageUrl = saveImage(image);
+                    cabDto.setImgUrl(imageUrl);
+                }else{
+                    cabDto.setImgUrl(null);
+                }
 
+                cabDto.setAddedDate(new Date().toString());
+                CabModel cab = cabRepo.save(modelMapper.map(cabDto , CabModel.class));
+                return ResponseEntity.status(HttpStatus.CREATED).body("User Created!");
+            } catch (Exception e) {
+                throw new RuntimeException(e.getMessage());
+
+            }
         }
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This driver already has add vechical. For now one driver can add one vehical only");
+
+
     }
 
 
@@ -105,5 +114,48 @@ public class CabService {
         return ResponseEntity.status(HttpStatus.OK).body(cabRepo.findAll());
     }
 
+
+    public ResponseEntity<?> updateCab(CabUpdateDto cabUpdateDto){
+
+        Optional<CabModel> cab = cabRepo.findById(cabUpdateDto.getId());
+
+        if(cab.isPresent()){
+            cab.get().setCabDescription(cabUpdateDto.getCabDescription());
+            cab.get().setCabName(cabUpdateDto.getCabName());
+            cab.get().setAvarageKmPrice(cabUpdateDto.getAvarageKmPrice());
+            cab.get().setFirst7kmPrice(cabUpdateDto.getFirst7kmPrice());
+            cab.get().setPhoneNumber(cabUpdateDto.getPhoneNumber());
+            cab.get().setOwnerName(cabUpdateDto.getOwnerName());
+
+            CabModel updatedCab = cabRepo.save(cab.get());
+
+            return ResponseEntity.status(HttpStatus.OK).body(updatedCab);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cab Id not founded!");
+    }
+
+    public ResponseEntity<?> getCabsByDriverId(String id){
+
+        List<CabModel> cabs = cabRepo.findAllByDriveId(id);
+
+        if(cabs.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cabs not found!");
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(cabs);
+
+    }
+
+    public ResponseEntity<?> deleteCab(String id){
+        Optional<CabModel> cab = cabRepo.findById(id);
+
+        if(cab.isPresent()){
+            cabRepo.deleteById(id);
+
+            return ResponseEntity.status(HttpStatus.OK).body("Cab Deleted");
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cab not founded!");
+    }
 
 }
