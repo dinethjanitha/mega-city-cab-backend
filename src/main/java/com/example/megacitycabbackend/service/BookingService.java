@@ -2,7 +2,7 @@ package com.example.megacitycabbackend.service;
 
 import com.example.megacitycabbackend.dto.BookingBillingDto;
 import com.example.megacitycabbackend.dto.BookingDtoUsers;
-import com.example.megacitycabbackend.dto.BookingUpdateDto;
+import com.example.megacitycabbackend.dto.BookingStatusUpdateDto;
 import com.example.megacitycabbackend.model.Booking;
 import com.example.megacitycabbackend.repo.BookingRepo;
 import org.modelmapper.ModelMapper;
@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,12 +39,12 @@ public class BookingService {
 
     }
 
-    public ResponseEntity<?> updateBooking(BookingUpdateDto bookingUpdateDto){
+    public ResponseEntity<?> updateBooking(BookingStatusUpdateDto bookingStatusUpdateDto){
 
-        Optional<Booking> getBooking = bookingRepo.findById(bookingUpdateDto.getId());
+        Optional<Booking> getBooking = bookingRepo.findById(bookingStatusUpdateDto.getId());
 
         if(getBooking.isPresent()){
-            getBooking.get().setBookingStatus(bookingUpdateDto.getBookingStatus());
+            getBooking.get().setBookingStatus(bookingStatusUpdateDto.getBookingStatus());
             Booking bookingDetails = bookingRepo.save(getBooking.get());
             if(bookingDetails != null && bookingDetails.getId() != null){
                 return ResponseEntity.status(HttpStatus.CREATED).body(bookingDetails);
@@ -156,4 +158,20 @@ public class BookingService {
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Booking not found!");
     }
+
+    public  ResponseEntity<?> getAllBookingsToday(){
+        return ResponseEntity.status(HttpStatus.OK).body("");
+    }
+
+
+    public long getTodayBookingCount() {
+        // Get today's date in the same format as bookingDate
+        SimpleDateFormat sdf = new SimpleDateFormat("E MMM dd yyyy");
+        String todayDate = sdf.format(new Date());
+
+        // Count bookings for today, handle null values
+        List<Booking> count = bookingRepo.findAll();
+        return count.stream().count();
+    }
+
 }

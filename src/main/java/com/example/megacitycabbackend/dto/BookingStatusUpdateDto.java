@@ -3,7 +3,7 @@ package com.example.megacitycabbackend.dto;
 import lombok.Data;
 
 @Data
-public class BookingUpdateDto {
+public class BookingStatusUpdateDto {
     private String id;
     private String bookingStatus;
 }

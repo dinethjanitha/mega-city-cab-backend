@@ -2,13 +2,12 @@ package com.example.megacitycabbackend.controller;
 
 import com.example.megacitycabbackend.dto.BookingBillingDto;
 import com.example.megacitycabbackend.dto.BookingDtoUsers;
-import com.example.megacitycabbackend.dto.BookingUpdateDto;
+import com.example.megacitycabbackend.dto.BookingStatusUpdateDto;
 import com.example.megacitycabbackend.model.Booking;
 import com.example.megacitycabbackend.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -33,8 +32,8 @@ public class BookingController {
 
 
     @PatchMapping("/booking")
-    public ResponseEntity<?> updateBooking(@RequestBody BookingUpdateDto bookingUpdateDto){
-        return bookingService.updateBooking(bookingUpdateDto);
+    public ResponseEntity<?> updateBooking(@RequestBody BookingStatusUpdateDto bookingStatusUpdateDto){
+        return bookingService.updateBooking(bookingStatusUpdateDto);
     }
 
     @GetMapping("/booking/user/{id}")
@@ -60,6 +59,11 @@ public class BookingController {
     @PatchMapping("/booking/bill")
     public ResponseEntity<?> updateBookingBill(@RequestBody BookingBillingDto bookingBillingDto){
         return bookingService.updateBillingDetails(bookingBillingDto);
+    }
+
+    @GetMapping("/bookings/today/count")
+    public long getTodayBookingCount() {
+        return bookingService.getTodayBookingCount();
     }
 
 
