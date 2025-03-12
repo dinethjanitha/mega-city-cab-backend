@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/api/v1/")
 public class BookingController {
@@ -17,7 +19,7 @@ public class BookingController {
     private BookingService bookingService;
 
     @PostMapping("/booking")
-    public ResponseEntity<?> saveBooking(@RequestBody Booking booking){
+    public ResponseEntity<?> saveBooking(@RequestBody Booking booking) throws IOException {
         if(booking.getDriverId().isEmpty() || booking.getUserId().isEmpty()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Required field not found!");
         }
@@ -57,7 +59,7 @@ public class BookingController {
     }
 
     @PatchMapping("/booking/bill")
-    public ResponseEntity<?> updateBookingBill(@RequestBody BookingBillingDto bookingBillingDto){
+    public ResponseEntity<?> updateBookingBill(@RequestBody BookingBillingDto bookingBillingDto) throws IOException {
         return bookingService.updateBillingDetails(bookingBillingDto);
     }
 

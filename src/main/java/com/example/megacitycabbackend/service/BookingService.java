@@ -3,14 +3,19 @@ package com.example.megacitycabbackend.service;
 import com.example.megacitycabbackend.dto.BookingBillingDto;
 import com.example.megacitycabbackend.dto.BookingDtoUsers;
 import com.example.megacitycabbackend.dto.BookingStatusUpdateDto;
+import com.example.megacitycabbackend.dto.UserDTO;
 import com.example.megacitycabbackend.model.Booking;
+import com.example.megacitycabbackend.model.UserModel;
 import com.example.megacitycabbackend.repo.BookingRepo;
+import com.example.megacitycabbackend.repo.UserRepo;
+import org.apache.catalina.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -26,12 +31,25 @@ public class BookingService {
     @Autowired
     private BookingRepo bookingRepo;
 
+    @Autowired
+    private UserRepo userRepo;
 
-    public ResponseEntity<?> makeBooking(Booking booking){
+    @Autowired
+    private EmailService emailService;
+
+    public ResponseEntity<?> makeBooking(Booking booking) throws IOException {
 
         Booking bookingDetails = bookingRepo.save(booking);
 
         if(bookingDetails != null && bookingDetails.getId() != null){
+
+            Optional<UserModel> user = userRepo.findById(booking.getUserId());
+
+            if(user.isPresent()){
+                emailService.sendEmail(user.get().getEmail() , "Booking Confirmation" , "Your booking has been confirmed");
+            }
+
+
             return ResponseEntity.status(HttpStatus.CREATED).body(bookingDetails);
         }
 
@@ -141,7 +159,7 @@ public class BookingService {
 
     }
 
-    public ResponseEntity<?> updateBillingDetails(BookingBillingDto bookingBillingDto){
+    public ResponseEntity<?> updateBillingDetails(BookingBillingDto bookingBillingDto) throws IOException {
         Optional<Booking> booking = bookingRepo.findById(bookingBillingDto.getId());
 
         if(booking.isPresent()){
@@ -150,7 +168,14 @@ public class BookingService {
             booking.get().setTotal(bookingBillingDto.getTotal());
             booking.get().setBookingStatus(bookingBillingDto.getBookingStatus());
 
+
             Booking updatedBooking =  bookingRepo.save(booking.get());
+
+            if(updatedBooking.getBookingStatus() == "ready"){
+                Optional<UserModel> user = userRepo.findById(updatedBooking.getUserId());
+                emailService.sendEmail(user.get().getEmail() , "Your journey Started" , "Your booking total is:" + updatedBooking.getTotal());
+            }
+
 
             return ResponseEntity.status(HttpStatus.OK).body(updatedBooking);
 

@@ -39,6 +39,8 @@ public class UserService {
     private JwtService jwtService;
 
 
+    @Autowired
+    private EmailService emailService;
 
     public int cal(int num1 , int num2){
         return num1 + num2;
@@ -65,6 +67,7 @@ public class UserService {
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nic is already Exit");
                     }else{
                         userReturn = userRepo.save(user);
+                        emailService.sendEmail(userReturn.getEmail(), "Welcome to Mega City Cab Service", "You have successfully registered to Mega City Cab Service");
                     }
                 }
 
