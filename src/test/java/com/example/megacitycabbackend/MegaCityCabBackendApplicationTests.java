@@ -6,8 +6,4 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public class MegaCityCabBackendApplicationTests {
 
-    @Test
-    void contextLoads() {
-    }
-
 }
