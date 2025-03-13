@@ -107,7 +107,9 @@ public class UserService {
     public ResponseEntity<?> updateUser(UserDTO userDTO){
         Optional<UserModel> user = userRepo.findById(userDTO.getId());
 
+
         if(user.isPresent()){
+            userDTO.setPassword(user.get().getPassword());
             userRepo.save(modelMapper.map(userDTO , UserModel.class));
             return ResponseEntity.status(HttpStatus.CREATED).body("OK");
         }

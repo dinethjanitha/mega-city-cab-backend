@@ -1,7 +1,5 @@
 package com.example.megacitycabbackend.controller;
 
-import static org.mockito.Mockito.when;
-
 import com.example.megacitycabbackend.dto.CabUpdateDto;
 import com.example.megacitycabbackend.service.CabService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,7 +30,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 @ContextConfiguration(classes = {CabController.class})
 @ExtendWith(SpringExtension.class)
 @DisabledInAotMode
-class CabControllerDiffblueTest {
+class CabControllerTest {
     @Autowired
     private CabController cabController;
 

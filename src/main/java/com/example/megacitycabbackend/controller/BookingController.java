@@ -68,7 +68,4 @@ public class BookingController {
         return bookingService.getTodayBookingCount();
     }
 
-
-
-
 }
