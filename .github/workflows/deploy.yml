@@ -1,0 +1,44 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+
+      - name: Grant execute permission for mvnw
+        run: chmod +x mvnw
+
+      - name: Build with Maven
+        run: ./mvnw clean package
+
+      - name: Run tests with Maven
+        run: ./mvnw test
+
+      - name: Deploy
+        env:
+          DEPLOY_SERVER: ${{ secrets.DEPLOY_SERVER }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        run: |
+          scp -r target/mega-city-cab-backend-0.0.1-SNAPSHOT.jar $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH/
+          ssh $DEPLOY_USER@$DEPLOY_SERVER "java -jar $DEPLOY_PATH/mega-city-cab-backend-0.0.1-SNAPSHOT.jar &"
+
+      - name: Clean up workspace
+        run: |
+          rm -rf target
